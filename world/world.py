@@ -1,5 +1,6 @@
 import tkinter as tk
 import entities.entities as ent
+from entities.entities import Entities
 
 
 class World:
@@ -9,7 +10,7 @@ class World:
         self.root = tk.Tk()
         self.canvas = tk.Canvas(self.root, width=width * 20, height=height * 20)
         self.canvas.pack()
-        self.organisms = [[None for _ in range(width)] for _ in range(height)]
+        self.organisms = [[None] * width for _ in range(height)]
 
     def addentity(self, organism, x, y):  # dodaj organizm
         self.organisms[x][y] = organism
@@ -23,8 +24,12 @@ class World:
             for x in range(self.width):
                 organism = self.organisms[y][x]
                 if organism:
+                    if isinstance(organism, ent.Animal):
+                        fill = ent.color_animals[organism.animalid - 1]
+                    else:
+                        fill = ent.color_weed[organism.weedid - 1]
                     self.canvas.create_rectangle(
-                        x * 20, y * 20, (x + 1) * 20, (y + 1) * 20, fill="green"
+                        x * 20, y * 20, (x + 1) * 20, (y + 1) * 20, fill=fill
                     )
 
     def start(self):  # start

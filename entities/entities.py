@@ -3,32 +3,39 @@ class Entities:
     _entity: str
     _strength: int
     _iniciation: int
-    
+
     def __init__(self, entity, strength, iniciation):
         self._entity = entity
         self._strength = strength
         self._iniciation = iniciation
-    
+
     def move(self):
         pass
 
     def actiov(self):
         pass
 
+
 class Weed(Entities):
-    _weedid: int
+    weedid: int
 
     def __init__(self, entity, strength, iniciation, weedid):
         super().__init__(entity, strength, iniciation)
-        self._weedid = weedid
+        self.weedid = weedid
+
+    def id(self) -> int:
+        self._weedid
 
 
 class Animal(Entities):
-    _animalid: int
+    animalid: int
 
     def __init__(self, entity, strength, iniciation, animalid):
         super().__init__(entity, strength, iniciation)
-        self._animalid = animalid
+        self.animalid = animalid
+
+    def id(self) -> int:
+        self._animalid
 
 
 wolf = Animal("wolf", 9, 5, 1)
@@ -41,3 +48,7 @@ hamster = Animal("Hamster", 1, 2, 6)
 weed = Weed("weed", 0, 0, 1)
 cocaine = Weed("cocaine", 0, 0, 2)
 Belladonna = Weed("Belladonna", 0, 0, 3)
+
+color_weed = ["green"]
+
+color_animals = ["red"]
