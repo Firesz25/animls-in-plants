@@ -23,9 +23,6 @@ class Weed(Entities):
         super().__init__(entity, strength, iniciation)
         self.weedid = weedid
 
-    def id(self) -> int:
-        self._weedid
-
 
 class Animal(Entities):
     animalid: int
@@ -33,9 +30,6 @@ class Animal(Entities):
     def __init__(self, entity, strength, iniciation, animalid):
         super().__init__(entity, strength, iniciation)
         self.animalid = animalid
-
-    def id(self) -> int:
-        self._animalid
 
 
 wolf = Animal("wolf", 9, 5, 1)
