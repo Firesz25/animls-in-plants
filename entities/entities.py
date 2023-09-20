@@ -3,13 +3,17 @@ class Entities:
     _entity: str
     _strength: int
     _iniciation: int
-
+    
     def __init__(self, entity, strength, iniciation):
-        self._id = id()
         self._entity = entity
         self._strength = strength
         self._iniciation = iniciation
+    
+    def move(self):
+        pass
 
+    def actiov(self):
+        pass
 
 class Weed(Entities):
     _weedid: int
