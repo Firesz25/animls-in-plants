@@ -68,7 +68,7 @@ class World:
 
         # Wykonaj akcje organizmów w kolejności
         for organism in organisms_list:
-            self.root.after(1000, lambda org=organism: org.move(self.world))  # Przekazujemy obiekt 'world' jako argument
+            organism.move() # Przekazujemy obiekt 'world' jako argument
             organism.action()
 
         self.update_world()
