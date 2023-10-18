@@ -27,13 +27,11 @@ class World:
             for x in range(self.width):
                 organism = self.organisms[y][x]
                 if organism:
-                    if isinstance(organism, ent.Animal):
-                        fill = ent.color_animals[organism.animalid - 1]
-                    else:
-                        fill = ent.color_weed[organism.weedid - 1]
+                    fill = organism.color  # Ustaw kolor na podstawie pola koloru organizmu
                     self.canvas.create_rectangle(
                         x * 20, y * 20, (x + 1) * 20, (y + 1) * 20, fill=fill
                     )
+
 
     def move_organism(self, x, y, new_x, new_y):
         if new_x >= 0 and new_x < self.width and new_y >= 0 and new_y < self.height:

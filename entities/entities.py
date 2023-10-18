@@ -24,10 +24,11 @@ class Entities:
 class Weed(Entities):
     weedid: int
 
-    def __init__(self, entity, strength, initiation, weedid, world=None):  # Dodaj domyślny argument world=None
+    def __init__(self, entity, strength, initiation, weedid, color, world=None):  # Dodaj domyślny argument world=None
         super().__init__(entity, strength, initiation)
         self.weedid = weedid
         self.initiation = initiation
+        self.color = color
         self.world = world  # Przypisz world po utworzeniu organizmu
         
 
@@ -39,11 +40,13 @@ class Weed(Entities):
 class Animal(Entities):
     animalid: int
 
-    def __init__(self, entity, strength, initiation, animalid, world=None):  # Dodaj domyślny argument world=None
+    def __init__(self, entity, strength, initiation, animalid, color, world=None):  # Dodaj domyślny argument world=None
         super().__init__(entity, strength, initiation)
         self.animalid = animalid
         self.initiation = initiation
+        self.color = color
         self.world = world  # Przypisz world po utworzeniu organizmu
+
         
         
     def move(self):
@@ -63,17 +66,14 @@ class Animal(Entities):
         pass
 
 
-wolf = Animal("wolf", 9, 5, 1)
-#sheep = Animal("sheep", 2, 4, 2)
-#fox = Animal("fox", 3, 7, 3)
-#snake = Animal("snake", 6, 3, 4)
-#horse = Animal("Horse", 5, 5, 5)
-#hamster = Animal("Hamster", 1, 2, 6)
+#wolf = Animal("wolf", 9, 5, 1, "red")
+#sheep = Animal("sheep", 2, 4, 2, "blue")
+#fox = Animal("fox", 3, 7, 3, "cyan")
+#snake = Animal("snake", 6, 3, 4, "yellow")
+#horse = Animal("Horse", 5, 5, 5, "magenta")
+#hamster = Animal("Hamster", 1, 2, 6, "black")
 
-#weed = Weed("weed", 0, 0, 1)
-#cocaine = Weed("cocaine", 0, 0, 2)
-#Belladonna = Weed("Belladonna", 0, 0, 3)
 
-color_weed = ["green"]
-
-color_animals = ["red"]
+#weed = Weed("weed", 0, 0, 1, "green")
+#cocaine = Weed("cocaine", 0, 0, 2, "green")
+#Belladonna = Weed("Belladonna", 0, 0, 3, "green")
