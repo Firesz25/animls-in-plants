@@ -67,6 +67,20 @@ class World:
     def move_organism(self, x, y, new_x, new_y):
         if new_x >= 0 and new_x < self.width and new_y >= 0 and new_y < self.height:
             if not self.organisms[new_y][new_x]:
+                # Nowe pole jest puste, więc przenieś organizm na to pole
+                self.organisms[new_y][new_x] = self.organisms[y][x]
+                self.organisms[y][x] = None
+                self.organisms[new_y][new_x].x = new_x
+                self.organisms[new_y][new_x].y = new_y
+            else:
+                current_organism = self.organisms[new_y][new_x]
+                moving_organism = self.organisms[y][x]
+
+                if isinstance(moving_organism, ent) and isinstance(current_organism, ent):
+                    if moving_organism.strength >= current_organism.strength:
+                        self.organisms[y][x] = None
+                    else:
+                        pass
                 self.organisms[new_y][new_x] = self.organisms[y][x]
                 self.organisms[y][x] = None
                 self.organisms[new_y][new_x].x = new_x
