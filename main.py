@@ -8,10 +8,10 @@ if __name__ == "__main__":
     # Lista dostępnych zwierząt
     animals = [
         ("wolf", 9, 5, 1, "red"),
-        ("sheep", 2, 4, 2, "blue"),
-        ("fox", 3, 7, 3, "cyan"),
+        ("sheep", 2, 4, 2, "pink"),
+        ("fox", 3, 7, 3, "orange"),
         ("snake", 6, 3, 4, "yellow"),
-        ("Horse", 5, 5, 5, "magenta"),
+        ("Horse", 5, 5, 5, "brown"),
         ("Hamster", 1, 2, 6, "black")
     ]
 
