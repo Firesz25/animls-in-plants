@@ -14,7 +14,7 @@ if __name__ == "__main__":
         ("Hamster", 1, 2, 6, "black")
     ]
 
-    for _ in range(10):
+    for _ in range(20):
         x = random.randint(0, world.width - 1)
         y = random.randint(0, world.height - 1)
         animal_data = random.choice(animals)

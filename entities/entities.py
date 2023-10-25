@@ -70,13 +70,13 @@ class Animal(Entities):
                     # Jeśli pole jest puste, po prostu przesuń organizm
                     self.world.move_organism(self.x, self.y, new_x, new_y)
                 elif self._strength >= target_organism._strength:
-                    # Jeśli organizm jest silniejszy, "zjada" organizm na polu docelowym
-                    self.world.removeentity(new_x, new_y)
-                    self.world.move_organism(self.x, self.y, new_x, new_y)
+                    # Jeśli organizm jest silniejszy i nie jest tego samego rodzaju, "zjada" organizm na polu docelowym
+                    if self._entity != target_organism._entity:
+                        self.world.removeentity(new_x, new_y)
+                        self.world.move_organism(self.x, self.y, new_x, new_y)
                 else:
                     # Jeśli organizm jest słabszy, to zostaje "zjedzony"
                     self.world.removeentity(self.x, self.y)
-
     def action(self):
         if self._entity == "fox":
             self.sniff()
@@ -86,9 +86,51 @@ class Animal(Entities):
             self.horse_move()
             if random.random() < 0.5:
                 self.escape()
-        else:
+            else:
+                # Domyślna akcja dla innych zwierząt
+                if self.is_collision():
+                    # Kolizja z innym organizmem
+                    if random.random() < 1:
+                        # 10% szansa na rozmnożenie się
+                        self.reproduce()
+
+                self.move()
+
 
             self.move()
+
+    def is_collision(self):
+        x, y = self.x, self.y
+        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        for dx, dy in directions:
+            new_x, new_y = x + dx, y + dy
+            if (
+                    0 <= new_x < self.world.width
+                    and 0 <= new_y < self.world.height
+                    and self.world.organisms[new_y][new_x]
+                    and self.world.organisms[new_y][new_x]._entity == self._entity
+            ):
+                return True
+        return False
+
+    def reproduce(self):
+        x, y = self.x, self.y
+        empty_cells = []
+        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        for dx, dy in directions:
+            new_x, new_y = x + dx, y + dy
+            if (
+                    0 <= new_x < self.world.width
+                    and 0 <= new_y < self.world.height
+                    and not self.world.organisms[new_y][new_x]
+            ):
+                empty_cells.append((new_x, new_y))
+
+        if empty_cells:
+            new_x, new_y = random.choice(empty_cells)
+            child = Animal(self._entity, self._strength, self._iniciation, self.animalid, self.color, self.world)
+            self.world.addentity(child, new_x, new_y)
+
     def sniff(self):
         for direction in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
             dx, dy = direction
