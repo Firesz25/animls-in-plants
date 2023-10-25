@@ -2,6 +2,8 @@ import entities.entities as ent
 from world.world import World
 import random
 
+
+
 if __name__ == "__main__":
     world = World(width=20, height=20)
 
@@ -13,6 +15,11 @@ if __name__ == "__main__":
         ("Horse", 5, 5, 5, "brown"),
         ("Hamster", 1, 2, 6, "black")
     ]
+    Weeds = [
+        ("weed", 0, 0, 1, "green"),
+        ("guarana", 0, 0, 2, "#32CD32"),
+        ("Belladonna", 0, 0, 3, "#326236"),
+    ]
 
     for _ in range(20):
         x = random.randint(0, world.width - 1)
@@ -21,10 +28,11 @@ if __name__ == "__main__":
         animal = ent.Animal(*animal_data, world)
         world.addentity(animal, x, y)
 
-    for _ in range(5):
+    for _ in range(10):
         x = random.randint(0, world.width - 1)
         y = random.randint(0, world.height - 1)
-        weed = ent.Weed("weed", 0, 0, 1, "green", world)
+        weed_data = random.choice(Weeds)
+        weed = ent.Weed(*weed_data, world)
         world.addentity(weed, x, y)
 
     world.start()

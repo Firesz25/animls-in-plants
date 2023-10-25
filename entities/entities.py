@@ -28,8 +28,40 @@ class Weed(Entities):
         pass
 
     def action(self):
-        if random.random() < 0.03:
-            self.spread()
+        if self._entity == "weed":
+            if random.random() < 0.03:
+                self.spread()
+        elif self._entity == "Belladonna":
+            self.kill()
+        elif self._entity == "guarana":
+            self.extrastrength()
+        else:
+            pass
+
+    def extrastrength(self):
+        if self.world and 0 <= self.x < self.world.width and 0 <= self.y < self.world.height:
+            target_organism = self.world.organisms[self.y][self.x]
+            if isinstance(target_organism, Animal):
+                target_organism._strength += 3
+
+
+    def kill(self):
+
+        for direction in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+            dx, dy = direction
+            new_x, new_y = self.x + dx, self.y + dy
+
+            if (
+                    0 <= new_x < self.world.width
+                    and 0 <= new_y < self.world.height
+            ):
+                target_organism = self.world.organisms[new_y][new_x]
+                if isinstance(target_organism, Animal):
+
+                    self.world.removeentity(target_organism.x, target_organism.y)
+
+                    self.world.removeentity(self.x, self.y)
+                    return
 
     def spread(self):
 
@@ -43,7 +75,6 @@ class Weed(Entities):
                 and 0 <= new_y < self.world.height
                 and not self.world.organisms[new_y][new_x]
             ):
-                # Tworzenie nowego organizmu "Weed" na nowym polu
                 new_weed = Weed("weed", 0, 0, self.weedid, self.color, self.world)
                 self.world.addentity(new_weed, new_x, new_y)
                 return
@@ -67,36 +98,42 @@ class Animal(Entities):
             if 0 <= new_x < self.world.width and 0 <= new_y < self.world.height:
                 target_organism = self.world.organisms[new_y][new_x]
                 if not target_organism:
-                    # Jeśli pole jest puste, po prostu przesuń organizm
+
                     self.world.move_organism(self.x, self.y, new_x, new_y)
                 elif self._strength >= target_organism._strength:
-                    # Jeśli organizm jest silniejszy i nie jest tego samego rodzaju, "zjada" organizm na polu docelowym
+
                     if self._entity != target_organism._entity:
                         self.world.removeentity(new_x, new_y)
                         self.world.move_organism(self.x, self.y, new_x, new_y)
                 else:
-                    # Jeśli organizm jest słabszy, to zostaje "zjedzony"
+
                     self.world.removeentity(self.x, self.y)
     def action(self):
         if self._entity == "fox":
             self.sniff()
+            if self.is_collision():
+                if random.random() < 0.5:
+                    self.reproduce()
+                self.move()
         elif self._entity == "snake":
             self.bite()
+            if self.is_collision():
+                if random.random() < 0.5:
+                    self.reproduce()
+                self.move()
         elif self._entity == "Horse":
             self.horse_move()
             if random.random() < 0.5:
                 self.escape()
-            else:
-                # Domyślna akcja dla innych zwierząt
-                if self.is_collision():
-                    # Kolizja z innym organizmem
-                    if random.random() < 1:
-                        # 10% szansa na rozmnożenie się
-                        self.reproduce()
-
+            if self.is_collision():
+                if random.random() < 0.5:
+                    self.reproduce()
+                self.horse_move()
+        else:
+            if self.is_collision():
+                if random.random() < 0.5:
+                    self.reproduce()
                 self.move()
-
-
             self.move()
 
     def is_collision(self):
@@ -206,15 +243,3 @@ class Animal(Entities):
         return True
 
 
-
-#wolf = Animal("wolf", 9, 5, 1, "red")
-#sheep = Animal("sheep", 2, 4, 2, "blue")
-#fox = Animal("fox", 3, 7, 3, "cyan")
-#snake = Animal("snake", 6, 3, 4, "yellow")
-#horse = Animal("Horse", 5, 5, 5, "magenta")
-#hamster = Animal("Hamster", 1, 2, 6, "black")
-
-
-#weed = Weed("weed", 0, 0, 1, "green")
-#cocaine = Weed("cocaine", 0, 0, 2, "green")
-#Belladonna = Weed("Belladonna", 0, 0, 3, "green")

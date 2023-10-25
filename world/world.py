@@ -1,5 +1,5 @@
 import tkinter as tk
-import entities.entities as ent
+
 
 class World:
     def __init__(self, width=20, height=20):
@@ -17,8 +17,14 @@ class World:
         self.draw_legend()
 
 
-        next_turn_button = tk.Button(self.root, text="Następna tura", command=self.next_turn)
-        next_turn_button.pack()
+        self.next_turn_button = tk.Button(self.root, text="Następna tura", command=self.next_turn)
+        self.next_turn_button.pack()
+
+        self.add_footer()
+
+    def add_footer(self):
+        footer_label = tk.Label(self.root, text="Tomasz Ciurkowski, Aleksander Czerny, Bartosz Urbański", font=("Helvetica", 12))
+        footer_label.pack(side=tk.BOTTOM)
 
     def draw_legend(self):
         legend_frame = tk.Frame(self.root)
@@ -30,11 +36,13 @@ class World:
         legend_entries = [
             ("Wilk", "red"),
             ("Owca", "pink"),
-            ("Lis", "orange"),
-            ("Wąż", "yellow"),
-            ("Koń", "brown"),
+            ("Lis - Dobry węch: lis nigdy nie ruszy się na pole zajmowane przez organizm silniejszy niż on", "orange"),
+            ("Wąż - Ginie przy kolizji z silniejszym przeciwnikiem, ale zatruwa i zabija swojego pogromcę", "yellow"),
+            ("Koń - Zasięg ruchu wynosi 2 pola. 50% szans na ucieczkę przed walką. Wówczas przesuwa się na niezajęte sąsiednie pole.", "brown"),
             ("Chomik", "black"),
-            ("Roślina", "green"),
+            ("roślina - ma 30% szans na rozprzestrzenienie się", "green"),
+            ("Wilcza jagoda - natychmiast zabija zwierzę które je zjadło", "#326236"),
+            ("Guarana - dodaje 3 pkt siły", "#32CD32"),
         ]
 
         for name, color in legend_entries:
@@ -66,25 +74,15 @@ class World:
 
     def move_organism(self, x, y, new_x, new_y):
         if new_x >= 0 and new_x < self.width and new_y >= 0 and new_y < self.height:
-            if not self.organisms[new_y][new_x]:
-                # Nowe pole jest puste, więc przenieś organizm na to pole
-                self.organisms[new_y][new_x] = self.organisms[y][x]
-                self.organisms[y][x] = None
-                self.organisms[new_y][new_x].x = new_x
-                self.organisms[new_y][new_x].y = new_y
-            else:
-                current_organism = self.organisms[new_y][new_x]
-                moving_organism = self.organisms[y][x]
+            current_organism = self.organisms[y][x]
+            target_organism = self.organisms[new_y][new_x]
 
-                if isinstance(moving_organism, ent) and isinstance(current_organism, ent):
-                    if moving_organism.strength >= current_organism.strength:
-                        self.organisms[y][x] = None
-                    else:
-                        pass
-                self.organisms[new_y][new_x] = self.organisms[y][x]
-                self.organisms[y][x] = None
-                self.organisms[new_y][new_x].x = new_x
-                self.organisms[new_y][new_x].y = new_y
+            if current_organism is not None:  # Dodaj sprawdzenie, czy organizm istnieje
+                current_organism.x = new_x
+                current_organism.y = new_y
+
+            self.organisms[new_y][new_x] = current_organism
+            self.organisms[y][x] = None
 
     def update_world(self):
         for y in range(self.height):
@@ -116,6 +114,7 @@ class World:
 
         self.update_world()
         self.draw_world()
+
 
 if __name__ == "__main__":
     world = World(20, 20)
