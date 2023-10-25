@@ -25,12 +25,28 @@ class Weed(Entities):
         self.world = world
 
     def move(self):
-        # Organizm Weed nie porusza się, więc pozostawiamy tę metodę pustą.
         pass
 
     def action(self):
-        # Logika działania rośliny
-        pass
+        if random.random() < 0.03:
+            self.spread()
+
+    def spread(self):
+
+        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        random.shuffle(directions)
+        for dx, dy in directions:
+            new_x, new_y = self.x + dx, self.y + dy
+
+            if (
+                0 <= new_x < self.world.width
+                and 0 <= new_y < self.world.height
+                and not self.world.organisms[new_y][new_x]
+            ):
+                # Tworzenie nowego organizmu "Weed" na nowym polu
+                new_weed = Weed("weed", 0, 0, self.weedid, self.color, self.world)
+                self.world.addentity(new_weed, new_x, new_y)
+                return
 
 class Animal(Entities):
     animalid: int
@@ -64,8 +80,14 @@ class Animal(Entities):
     def action(self):
         if self._entity == "fox":
             self.sniff()
+        elif self._entity == "snake":
+            self.bite()
+        elif self._entity == "Horse":
+            self.horse_move()
+            if random.random() < 0.5:
+                self.escape()
         else:
-            # Domyślna akcja dla innych zwierząt
+
             self.move()
     def sniff(self):
         for direction in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
@@ -79,12 +101,64 @@ class Animal(Entities):
             ):
                 self.world.move_organism(self.x, self.y, new_x, new_y)
                 return
+    def bite(self):
+        if self.world:
 
+            for direction in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+                dx, dy = direction
+                new_x, new_y = self.x + dx, self.y + dy
+
+                if (
+                        0 <= new_x < self.world.width
+                        and 0 <= new_y < self.world.height
+                ):
+                    target_organism = self.world.organisms[new_y][new_x]
+                    if isinstance(target_organism, Animal):
+
+                        if self._strength >= target_organism._strength:
+
+                            self.world.removeentity(new_x, new_y)
+                        else:
+
+                            self.world.removeentity(self.x, self.y)
+                            self.world.removeentity(new_x, new_y)
+                            return
+    def horse_move(self):
+        if self.world:
+
+            steps = random.randint(1, 2)
+            for _ in range(steps):
+
+                directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+                dx, dy = random.choice(directions)
+                new_x, new_y = self.x + dx, self.y + dy
+
+                if (
+                        0 <= new_x < self.world.width
+                        and 0 <= new_y < self.world.height
+                ):
+                    target_organism = self.world.organisms[new_y][new_x]
+                    if not target_organism:
+                        self.world.move_organism(self.x, self.y, new_x, new_y)
+    def escape(self):
+
+        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        random.shuffle(directions)
+        for dx, dy in directions:
+            new_x, new_y = self.x + dx, self.y + dy
+
+            if (
+                0 <= new_x < self.world.width
+                and 0 <= new_y < self.world.height
+                and not self.world.organisms[new_y][new_x]
+            ):
+                self.world.move_organism(self.x, self.y, new_x, new_y)
+                return
     def is_weaker_than_organism(self, x, y):
         # Sprawdź, czy organizm na danym polu jest silniejszy
         if (
                 self.world.organisms[y][x]
-                and self.world.organisms[y][x].strength > self._strength
+                and self.world.organisms[y][x]._strength > self._strength
         ):
             return False
         return True

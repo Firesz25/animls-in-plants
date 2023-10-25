@@ -11,12 +11,12 @@ class World:
         self.canvas.pack()
         self.organisms = [[None] * width for _ in range(height)]
         self.world = self
-        self.turn = 0  # Dodaj zmienną do śledzenia tury
+        self.turn = 0
 
-        # Dodaj legendę
+
         self.draw_legend()
 
-        # Dodaj przycisk do rozpoczęcia następnej tury
+
         next_turn_button = tk.Button(self.root, text="Następna tura", command=self.next_turn)
         next_turn_button.pack()
 
